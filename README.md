@@ -1,4 +1,4 @@
-# GB Wildlife Image Classifier
+# GB Wildlife Classifier
 
 A custom computer vision pipeline built with PyTorch and Streamlit to classify camera-trap images of wildlife native to Gilgit-Baltistan: the Snow Leopard, Markhor, and Himalayan Brown Bear.
 
@@ -49,4 +49,4 @@ To launch the interactive dashboard locally:
 ```bash
 streamlit run app.py
 ```
-Upload any image via the browser UI to see the model's prediction, confidence score, and dynamic bounding box annotation.
+Upload any image via the browser UI to see the model's prediction and confidence score.
