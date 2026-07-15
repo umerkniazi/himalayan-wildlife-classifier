@@ -5,14 +5,14 @@ from torchvision import transforms
 from PIL import Image, ImageDraw
 from src.model import get_model
 
-st.set_page_config(page_title="GB Wildlife Classifier", layout="centered")
+st.set_page_config(page_title="Himalayan Wildlife Classifier", layout="centered")
 
 @st.cache_resource
 def load_model():
     class_names = ['himalayan_brown_bear', 'markhor', 'snow_leopard']
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = get_model(num_classes=len(class_names))
-    model.load_state_dict(torch.load('models/gb_wildlife_model.pth', map_location=device, weights_only=True))
+    model.load_state_dict(torch.load('models/himalayan_wildlife_classifier.pth', map_location=device, weights_only=True))
     model = model.to(device)
     model.eval()
     return model, class_names, device
@@ -26,7 +26,7 @@ transform = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-st.title("GB Wildlife Classifier")
+st.title("Himalayan Wildlife Classifier")
 st.write("Upload an image to classify the wildlife species.")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
