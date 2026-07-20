@@ -1,28 +1,32 @@
 # Himalayan Wildlife Classifier
 
-A computer vision project built with PyTorch and Streamlit to classify images of three endangered Himalayan species: the Snow Leopard, Markhor and Himalayan Brown Bear. The model uses transfer learning with ResNet18 and includes an internal **other** class together with confidence thresholding to reduce false positives on unsupported species.
+A computer vision project built with PyTorch and Streamlit to classify images of three endangered Himalayan species: the Snow Leopard, Markhor and Himalayan Brown Bear.
 
-## Dataset Attribution
+> **Note:** Inspired by research into AI-assisted camera traps used to monitor wildlife in northern Pakistan. This project explores how dataset quality, class design and evaluation affect the performance of real-world computer vision systems.
 
-This project utilizes the **Wildlife Animals (Snowleopard, Brownbear, Markhor)** dataset.
+## Dataset
 
-* **Dataset Source:** [Wildlife Animals (Snowleopard, Brownbear, Markhor)](https://www.kaggle.com/datasets/hunzaikashif49/wildlife-animals-snowleopard-brwonbear-markhor)
-* **Description:** A curated collection of wildlife images representing three highly endangered, high-altitude species native to the Gilgit-Baltistan region.
+The model is trained on the [Wildlife Animals (Snowleopard, Brownbear, Markhor)](https://www.kaggle.com/datasets/hunzaikashif49/wildlife-animals-snowleopard-brwonbear-markhor) dataset, a collection of wildlife photographs representing three endangered species native to the Gilgit-Baltistan region.
 
-To improve robustness, a manually curated **other** class containing visually similar animals such as domestic cats, leopards, polar bears, wolves and goats was added during training.
+To improve robustness, a manually curated **Other** class was added containing visually similar animals including domestic cats, leopards, polar bears, wolves and goats. This allows the model to reject unsupported species instead of forcing every image into one of the target classes.
 
-## Architecture & Approach
+## Methodology
 
-* **Framework:** PyTorch
-* **Model Architecture:** ResNet18 (Transfer Learning)
-* **Training Strategy:** Feature Extraction with a pretrained ResNet18 backbone and a custom 4-class classification head.
-* **Training Classes:** Himalayan Brown Bear, Markhor, Snow Leopard and Other (internal rejection class).
-* **Data Augmentation:** RandomResizedCrop and RandomHorizontalFlip.
-* **UI/Frontend:** Streamlit for local interactive inference.
+The project uses transfer learning with a pretrained ResNet18 backbone and a custom four-class classification head.
 
-## Performance
+Key design decisions include:
 
-The model achieved **96.55% Validation Accuracy**.
+- Transfer learning instead of training from scratch to make better use of a relatively small dataset
+- An internal **Other** class to reduce false positives on unsupported species
+- An **80% confidence threshold** to reject uncertain predictions
+- Data augmentation using `RandomResizedCrop` and `RandomHorizontalFlip`
+- A Streamlit interface for local interactive inference
+
+During inference, predictions assigned to the **Other** class or below the confidence threshold are displayed as **Not a Supported Species**.
+
+## Results
+
+The model achieved **96.55% validation accuracy**.
 
 | Class | Precision | Recall | F1-score |
 | :--- | ---: | ---: | ---: |
@@ -35,28 +39,26 @@ The model achieved **96.55% Validation Accuracy**.
 
 ![Confusion Matrix](results/confusion_matrix.png)
 
-## QA Testing, Edge Cases & Limitations
+## Testing and Limitations
 
-The model was tested on external images in addition to the validation dataset.
+The model was evaluated on both the validation set and external images.
 
-* An internal **other** class and an **80% confidence threshold** help reduce false positives on unsupported species.
-* Visually similar animals can still be confused in some cases, for example domestic cats and snow leopards, polar bears and Himalayan brown bears or domestic goats and markhors.
-* Predictions assigned to the internal **other** class or below the confidence threshold are displayed as **Not a Supported Species**.
+Adding the **Other** class and confidence threshold significantly reduced false positives, but visually similar animals can still be confused in some cases. For example, domestic cats may resemble snow leopards, domestic goats may resemble markhors and other bear species may resemble Himalayan brown bears.
 
-**Future Improvements:** Fine tune the ResNet backbone, expand the **other** class with additional species, collect more diverse wildlife images and explore object detection models such as YOLO.
+The project also highlighted an important lesson: improving the dataset often has a greater impact than changing the model. The training data contains conventional wildlife photographs rather than camera trap images, so it does not fully represent the conditions the model would encounter in practice. A larger and more diverse dataset would likely improve performance more than experimenting with different architectures.
 
-## Local Setup & Usage
+## Future Improvements
 
-### 1. Install Dependencies
+- Fine-tune the ResNet18 backbone
+- Expand the **Other** class with additional species
+- Collect more diverse wildlife imagery, particularly camera trap data if it becomes available
+- Explore object detection models such as YOLO to detect and classify animals within an image
+
+## Run Locally
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Run the Web Interface
-
-```bash
 streamlit run app.py
 ```
 
-Upload any image through the browser UI to receive a prediction and confidence score.
+Upload an image through the Streamlit interface to receive a prediction and confidence score.
